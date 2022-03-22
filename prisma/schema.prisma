@@ -2,18 +2,29 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator erd {
+  provider = "prisma-erd-generator"
+  output   = "./erd/ERD.pdf"
+  theme    = "forest"
+}
+
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgresql://admin:admin@localhost:5432/annual-work?schema=public"
 }
 
 model User {
-  id       Int          @id @default(autoincrement())
-  email    String       @unique
-  name     String?
-  password String
-  salt     String
-  works    AnnualWork[]
+  id          Int          @id @default(autoincrement())
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  email       String       @unique
+  name        String?
+  password    String
+  salt        String
+  works       AnnualWork[] @relation("author")
+  patrolWorks AnnualWork[] @relation("patrol")
+  role        UserRole     @default(STUDENT)
+  isAdmin     Boolean      @default(false)
 }
 
 model AnnualWork {
@@ -22,6 +33,14 @@ model AnnualWork {
   updatedAt   DateTime @updatedAt
   title       String   @db.VarChar(255)
   description String?
-  owner       User     @relation(fields: [ownerId], references: [id])
-  ownerId     Int
+  keywords    String[]
+  author      User     @relation("author", fields: [authorId], references: [id])
+  authorId    Int
+  patrol      User     @relation("patrol", fields: [patrolId], references: [id])
+  patrolId    Int
+}
+
+enum UserRole {
+  STUDENT
+  TEACHER
 }
