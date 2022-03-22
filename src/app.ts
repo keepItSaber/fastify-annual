@@ -5,7 +5,11 @@ import swagger from 'fastify-swagger';
 import { withRefResolver } from 'fastify-zod';
 
 import userRoutes from "./modules/user/user.route";
+import annualRoutes from "./modules/annual/annual.route";
+
+
 import { userSchemas } from "./modules/user/user.schema";
+import { annualSchemas } from "./modules/annual/annual.schema";
 
 
 export const server = Fastify();
@@ -13,6 +17,16 @@ export const server = Fastify();
 declare module "fastify" {
     export interface FastifyInstance {
         authenticate: any
+    }
+}
+
+declare module 'fastify-jwt' {
+    interface FastifyJWT {
+        user: {
+            id: number,
+            email: string,
+            name: string,
+        }
     }
 }
 
@@ -34,7 +48,7 @@ server.get('/healthcheck', async () => {
 
 async function main() {
 
-    for (const schema of userSchemas) {
+    for (const schema of [...userSchemas,...annualSchemas]) {
         server.addSchema(schema);
     }
 
@@ -53,6 +67,8 @@ async function main() {
     );
 
     server.register(userRoutes, { prefix: 'api/users' });
+
+    server.register(annualRoutes, { prefix: 'api/annuals' });
 
     try {
         await server.listen(3000, '0.0.0.0');

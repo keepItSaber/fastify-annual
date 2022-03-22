@@ -24,9 +24,19 @@ export async function findUserByEmail(email: string) {
     );
 }
 
+export async function findUser(id: number) {
+    return prisma.user.findUnique({
+        where: {
+            id
+        }
+    })
+}
+
 export async function findUsers() {
     return prisma.user.findMany({
-        select: { email: true, name: true, id: true }
+        select: {
+            email: true, name: true, id: true, isAdmin: true, works: true, patrolWorks: true, role: true,
+        }
     });
 }
 
