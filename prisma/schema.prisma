@@ -10,7 +10,7 @@ generator erd {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgresql://admin:admin@localhost:5432/annual-works_system?schema=public"
 }
 
 model User {

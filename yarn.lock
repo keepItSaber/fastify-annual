@@ -1034,6 +1034,14 @@ fastfall@^1.5.0:
   dependencies:
     reusify "^1.0.0"
 
+fastify-cors@^6.0.3:
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/fastify-cors/-/fastify-cors-6.0.3.tgz#1907f92c3f855a18ef6fb6213186c73cf0bbf9e4"
+  integrity sha512-fMbXubKKyBHHCfSBtsCi3+7VyVRdhJQmGes5gM+eGKkRErCdm0NaYO0ozd31BQBL1ycoTIjbqOZhJo4RTF/Vlg==
+  dependencies:
+    fastify-plugin "^3.0.0"
+    vary "^1.1.2"
+
 fastify-error@^0.3.0:
   version "0.3.1"
   resolved "https://registry.npmjs.org/fastify-error/-/fastify-error-0.3.1.tgz"
@@ -2042,6 +2050,11 @@ util-deprecate@^1.0.1:
   version "1.0.2"
   resolved "https://registry.npmjs.org/util-deprecate/-/util-deprecate-1.0.2.tgz"
   integrity sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=
+
+vary@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
+  integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
 
 webidl-conversions@^3.0.0:
   version "3.0.1"
