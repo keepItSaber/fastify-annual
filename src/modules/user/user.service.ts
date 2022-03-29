@@ -30,9 +30,12 @@ export async function findUser(id: number) {
             id
         }
     })
+
+
 }
 
 export async function findUsers() {
+
     return prisma.user.findMany({
         select: {
             email: true, name: true, id: true, isAdmin: true, works: true, patrolWorks: true, role: true,
