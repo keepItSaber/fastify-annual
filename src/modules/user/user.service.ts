@@ -3,44 +3,38 @@ import prisma from "../../utils/prisma";
 import { CreateUserInput } from "./user.schema";
 
 export async function createUser(input: CreateUserInput) {
+  const { password, ...rest } = input;
 
-    const { password, ...rest } = input;
+  const { hash, salt } = hashPassword(password);
 
-    const { hash, salt } = hashPassword(password);
+  const user = await prisma.user.create({
+    data: { ...rest, salt, password: hash },
+  });
 
-    const user = await prisma.user.create({
-        data: { ...rest, salt, password: hash },
-    });
-
-    return user;
+  return user;
 }
-
 
 export async function findUserByEmail(email: string) {
-    return prisma.user.findUnique(
-        {
-            where: { email },
-        }
-    );
+  return prisma.user.findUnique({
+    where: { email },
+  });
 }
 
-export async function findUser(id: number) {
-    return prisma.user.findUnique({
-        where: {
-            id
-        }
-    })
-
-
+export async function findUserById(id: number) {
+  const users = await prisma.user.findMany();
+  return users.filter((user) => user.id == 1);
 }
 
 export async function findUsers() {
-
-    return prisma.user.findMany({
-        select: {
-            email: true, name: true, id: true, isAdmin: true, works: true, patrolWorks: true, role: true,
-        }
-    });
+  return prisma.user.findMany({
+    select: {
+      email: true,
+      name: true,
+      id: true,
+      isAdmin: true,
+      works: true,
+      patrolWorks: true,
+      role: true,
+    },
+  });
 }
-
-
