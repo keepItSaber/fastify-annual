@@ -25,22 +25,97 @@ model User {
   patrolWorks AnnualWork[] @relation("patrol")
   role        UserRole     @default(STUDENT)
   isAdmin     Boolean      @default(false)
+
+  WorkRequest       WorkRequest[] @relation("author")
+  PatrolWorkRequest WorkRequest[] @relation("patrol")
+
+
+
+  ConsultationRequest       ConsultationRequest[] @relation("author")
+  patrolConsultationRequest ConsultationRequest[] @relation("patrol")
 }
 
 model AnnualWork {
-  id          Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  title       String   @db.VarChar(255)
+  id            Int             @id @default(autoincrement())
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  title         String          @db.VarChar(255)
+  description   String?
+  note          String?
+  schoolYear    String
+  keywords      String[]
+  author        User            @relation("author", fields: [authorId], references: [id])
+  authorId      Int
+  patrol        User            @relation("patrol", fields: [patrolId], references: [id])
+  patrolId      Int
+  Consultation  Consultation[]
+  Documentation Documentation[]
+}
+
+model WorkRequest {
+  id          Int           @id @default(autoincrement())
+  header      String        @default("")
+  status      RequestStatus @default(PENDING)
   description String?
-  keywords    String[]
-  author      User     @relation("author", fields: [authorId], references: [id])
+  author      User          @relation("author", fields: [authorId], references: [id])
   authorId    Int
-  patrol      User     @relation("patrol", fields: [patrolId], references: [id])
+  patrol      User          @relation("patrol", fields: [patrolId], references: [id])
   patrolId    Int
+
+}
+
+model ConsultationRequest {
+  id       Int           @id @default(autoincrement())
+  date     DateTime
+  status   RequestStatus @default(PENDING)
+  author   User          @relation("author", fields: [authorId], references: [id])
+  authorId Int
+  patrol   User          @relation("patrol", fields: [patrolId], references: [id])
+  patrolId Int
+}
+
+model Documentation {
+  id           Int        @id @default(autoincrement())
+  fileUrl      String
+  annualWork   AnnualWork @relation(fields: [annualWorkId], references: [id])
+  annualWorkId Int
+}
+
+model Consultation {
+  id           Int        @id @default(autoincrement())
+  updatedAt    DateTime   @updatedAt
+  date         DateTime
+  status       Status     @default(PENDING)
+  rating       Int?
+  notes        String?
+  annualWork   AnnualWork @relation(fields: [annualWorkId], references: [id])
+  annualWorkId Int
+  Goal         Goal[]
+}
+
+model Goal {
+  id             Int          @id @default(autoincrement())
+  status         Status       @default(PENDING)
+  date           DateTime
+  title          String
+  description    String
+  consultation   Consultation @relation(fields: [consultationId], references: [id])
+  consultationId Int
 }
 
 enum UserRole {
   STUDENT
   TEACHER
+}
+
+enum Status {
+  PENDING
+  LATE
+
+}
+
+enum RequestStatus {
+  PENDING
+  DECLINED
+  ACCEPTED
 }
